@@ -1,74 +1,839 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>TripperHut | Trekking & Adventures</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background: #f4f4f4;
-      text-align: center;
-    }
-    header {
-      background: #1b5e20;
-      color: white;
-      padding: 40px;
-    }
-    section {
-      padding: 30px;
-    }
-    .card {
-      background: white;
-      margin: 20px auto;
-      padding: 20px;
-      width: 80%;
-      max-width: 500px;
-      border-radius: 10px;
-    }
-    a.button {
-      display: inline-block;
-      background: #2e7d32;
-      color: white;
-      padding: 12px 20px;
-      text-decoration: none;
-      border-radius: 5px;
-      margin-top: 10px;
-    }
-    footer {
-      background: #333;
-      color: white;
-      padding: 15px;
-      font-size: 14px;
-    }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Book a Trek — Tripper Hut</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --forest: #1a2e1a;
+  --moss: #3d5c2e;
+  --sage: #7a9e6e;
+  --cream: #f5f0e8;
+  --sand: #e8dfc8;
+  --ember: #c4622d;
+  --ember-light: #e8835a;
+  --white: #fdfcfa;
+  --text: #1a1a18;
+  --muted: #6b6b5e;
+  --radius: 4px;
+  --radius-lg: 12px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── HERO ── */
+.hero {
+  position: relative;
+  background: var(--forest);
+  padding: 0;
+  overflow: hidden;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.hero-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 70% 0%, rgba(61,92,46,0.6) 0%, transparent 60%),
+    radial-gradient(ellipse at 0% 100%, rgba(196,98,45,0.2) 0%, transparent 50%),
+    linear-gradient(160deg, #0f1f0f 0%, #1a2e1a 50%, #243824 100%);
+}
+
+.hero-texture {
+  position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+.hero-mountains {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 80px;
+  opacity: 0.15;
+}
+
+.hero-content {
+  position: relative; z-index: 2;
+  padding: 48px 40px 36px;
+}
+
+.brand-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 100px;
+  padding: 6px 14px;
+  margin-bottom: 20px;
+}
+
+.brand-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--ember-light);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(0.85)} }
+
+.brand-name {
+  font-size: 12px; font-weight: 500; letter-spacing: 0.12em;
+  text-transform: uppercase; color: rgba(255,255,255,0.75);
+}
+
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 5vw, 44px);
+  font-weight: 400;
+  color: var(--white);
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+
+.hero h1 em { font-style: italic; color: var(--sage); }
+
+.hero p {
+  font-size: 14px; font-weight: 300;
+  color: rgba(255,255,255,0.55);
+  letter-spacing: 0.02em;
+}
+
+/* ── STEP PROGRESS ── */
+.progress-bar {
+  background: var(--forest);
+  padding: 0 40px 20px;
+  position: relative; z-index: 2;
+}
+
+.steps-track {
+  display: flex; align-items: center; gap: 0;
+  max-width: 640px;
+}
+
+.step-item {
+  display: flex; align-items: center; gap: 8px;
+  flex: 1;
+}
+
+.step-circle {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.3);
+  flex-shrink: 0;
+  transition: all 0.3s;
+}
+
+.step-circle.active { border-color: var(--ember); background: var(--ember); color: white; }
+.step-circle.done { border-color: var(--sage); background: var(--sage); color: white; }
+
+.step-label {
+  font-size: 11px; font-weight: 400; color: rgba(255,255,255,0.3);
+  letter-spacing: 0.05em; text-transform: uppercase;
+  transition: color 0.3s;
+  white-space: nowrap;
+}
+
+.step-label.active { color: rgba(255,255,255,0.85); }
+.step-label.done { color: var(--sage); }
+
+.step-line {
+  flex: 1; height: 1px;
+  background: rgba(255,255,255,0.1);
+  margin: 0 8px;
+  transition: background 0.3s;
+}
+
+.step-line.done { background: var(--sage); }
+
+/* ── MAIN FORM AREA ── */
+.main {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+.section-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(0,0,0,0.06);
+  overflow: hidden;
+  margin-bottom: 20px;
+  display: none;
+  animation: fadeUp 0.4s ease;
+}
+
+.section-card.active { display: block; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.card-header {
+  padding: 24px 28px 0;
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 24px;
+}
+
+.card-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: var(--cream); display: flex; align-items: center;
+  justify-content: center; font-size: 18px; flex-shrink: 0;
+}
+
+.card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px; font-weight: 400; color: var(--forest);
+}
+
+.card-sub {
+  font-size: 13px; color: var(--muted); margin-top: 2px;
+}
+
+.card-body { padding: 0 28px 28px; }
+
+/* ── FORM ELEMENTS ── */
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.field-row.single { grid-template-columns: 1fr; }
+.field-row.triple { grid-template-columns: 1fr 1fr 1fr; }
+
+.field { display: flex; flex-direction: column; gap: 6px; }
+
+label {
+  font-size: 11px; font-weight: 500; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--muted);
+}
+
+input[type=text], input[type=email], input[type=tel], input[type=number], select {
+  height: 44px;
+  border: 1.5px solid rgba(0,0,0,0.12);
+  border-radius: var(--radius);
+  padding: 0 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px; color: var(--text);
+  background: var(--white);
+  outline: none;
+  transition: border-color 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+input:focus, select:focus { border-color: var(--moss); }
+input.error, select.error { border-color: var(--ember); }
+
+.select-wrap { position: relative; }
+.select-wrap::after {
+  content: '▾';
+  position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+  color: var(--muted); font-size: 12px; pointer-events: none;
+}
+
+.err-msg { font-size: 11px; color: var(--ember); margin-top: 2px; display: none; }
+.err-msg.show { display: block; }
+
+/* ── TREK CARDS ── */
+.trek-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.trek-card {
+  border: 1.5px solid rgba(0,0,0,0.1);
+  border-radius: 10px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.trek-card:hover { border-color: var(--moss); background: #f8fbf6; }
+.trek-card.selected { border-color: var(--moss); background: #f2f8ef; }
+
+.trek-card.selected::after {
+  content: '✓';
+  position: absolute; top: 10px; right: 12px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--moss); color: white;
+  font-size: 11px; display: flex; align-items: center; justify-content: center;
+  line-height: 20px; text-align: center;
+}
+
+.trek-name { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 400; color: var(--forest); margin-bottom: 4px; }
+.trek-meta { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+.trek-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.pill {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.05em;
+  padding: 3px 8px; border-radius: 100px;
+  background: var(--cream); color: var(--moss);
+  border: 1px solid rgba(61,92,46,0.2);
+}
+.trek-price { font-size: 15px; font-weight: 500; color: var(--ember); }
+.trek-price span { font-size: 11px; color: var(--muted); font-weight: 400; }
+
+/* ── CO-TREKKER ── */
+.cotrekker-item {
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 8px; padding: 16px;
+  margin-bottom: 12px;
+  background: var(--cream);
+  position: relative;
+}
+
+.cotrekker-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 14px;
+}
+
+.cotrekker-title { font-size: 13px; font-weight: 500; color: var(--forest); }
+
+.remove-btn {
+  background: none; border: none; cursor: pointer;
+  font-size: 18px; color: var(--muted); line-height: 1;
+  padding: 2px 4px;
+}
+.remove-btn:hover { color: var(--ember); }
+
+.add-co-btn {
+  width: 100%; padding: 12px;
+  border: 1.5px dashed rgba(61,92,46,0.4);
+  border-radius: 8px; background: none; cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px; color: var(--moss); font-weight: 500;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: all 0.2s; margin-top: 4px;
+}
+.add-co-btn:hover { background: #f2f8ef; border-color: var(--moss); }
+
+/* ── SUMMARY ── */
+.summary-row {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.06);
+  font-size: 14px;
+}
+.summary-row:last-child { border-bottom: none; }
+.summary-label { color: var(--muted); }
+.summary-val { font-weight: 500; color: var(--text); }
+.summary-total { font-size: 16px; font-weight: 500; }
+.summary-total .summary-val { color: var(--ember); font-size: 20px; }
+
+.upi-block {
+  background: var(--cream);
+  border-radius: 10px; padding: 20px;
+  text-align: center; margin: 20px 0;
+  border: 1px solid rgba(0,0,0,0.08);
+}
+
+.qr-placeholder {
+  width: 120px; height: 120px; margin: 0 auto 12px;
+  border: 2px dashed var(--moss);
+  border-radius: 8px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 4px;
+  font-size: 11px; color: var(--moss);
+}
+
+.upi-id { font-size: 15px; font-weight: 500; color: var(--forest); margin-bottom: 4px; }
+.upi-note { font-size: 12px; color: var(--muted); }
+
+/* ── BUTTONS ── */
+.btn-primary {
+  width: 100%; height: 50px;
+  background: var(--forest);
+  color: white; border: none; border-radius: var(--radius);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px; font-weight: 500; letter-spacing: 0.04em;
+  cursor: pointer; transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-primary:hover { background: var(--moss); }
+.btn-primary.ember { background: var(--ember); }
+.btn-primary.ember:hover { background: #b5552a; }
+
+.btn-secondary {
+  width: 100%; height: 44px;
+  background: none; color: var(--muted);
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: var(--radius);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px; cursor: pointer;
+  margin-top: 10px; transition: all 0.2s;
+}
+.btn-secondary:hover { background: var(--cream); color: var(--text); }
+
+.btn-row { display: flex; gap: 10px; margin-top: 24px; }
+.btn-row .btn-back {
+  width: 44px; height: 50px; flex-shrink: 0;
+  background: var(--cream); border: 1px solid rgba(0,0,0,0.1);
+  border-radius: var(--radius); cursor: pointer;
+  font-size: 18px; color: var(--muted);
+  transition: all 0.2s;
+}
+.btn-row .btn-back:hover { background: var(--sand); color: var(--text); }
+
+/* ── CONFIRMATION ── */
+.confirm-screen { text-align: center; padding: 48px 28px; }
+.confirm-icon {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--moss), var(--sage));
+  margin: 0 auto 24px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px;
+}
+.confirm-ref {
+  display: inline-block;
+  background: var(--cream); border-radius: 100px;
+  padding: 6px 16px; font-size: 13px; font-weight: 500;
+  color: var(--moss); letter-spacing: 0.08em;
+  margin: 12px 0 8px;
+  border: 1px solid rgba(61,92,46,0.2);
+}
+.confirm-screen h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px; font-weight: 400; color: var(--forest);
+  margin-bottom: 8px;
+}
+.confirm-screen p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+/* ── FOOTER TAG ── */
+.footer-tag {
+  text-align: center; padding: 24px;
+  font-size: 12px; color: var(--muted);
+}
+.footer-tag a { color: var(--moss); text-decoration: none; }
+
+@media (max-width: 480px) {
+  .hero-content { padding: 36px 20px 28px; }
+  .progress-bar { padding: 0 20px 18px; }
+  .step-label { display: none; }
+  .main { padding: 24px 14px 60px; }
+  .card-header { padding: 20px 20px 0; }
+  .card-body { padding: 0 20px 20px; }
+  .field-row { grid-template-columns: 1fr; }
+  .field-row.triple { grid-template-columns: 1fr 1fr; }
+  .trek-grid { grid-template-columns: 1fr; }
+}
+</style>
 </head>
 <body>
 
-<header>
-  <h1>TripperHut</h1>
-  <p>Explore the wild. Trek with purpose.</p>
-</header>
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-texture"></div>
+  <svg class="hero-mountains" viewBox="0 0 1200 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,80 L0,50 L100,20 L200,45 L320,5 L440,40 L540,15 L660,38 L780,8 L880,35 L980,18 L1100,42 L1200,22 L1200,80 Z" fill="white"/>
+  </svg>
+  <div class="hero-content">
+    <div class="brand-badge">
+      <div class="brand-dot"></div>
+      <span class="brand-name">Tripper Hut</span>
+    </div>
+    <h1>Book your next<br><em>great adventure</em></h1>
+    <p>Where Travel Meets Experience &nbsp;·&nbsp; Customised Treks &amp; Stays</p>
+  </div>
+  <!-- PROGRESS -->
+  <div class="progress-bar">
+    <div class="steps-track">
+      <div class="step-item">
+        <div class="step-circle active" id="sc1">1</div>
+        <span class="step-label active" id="sl1">You</span>
+      </div>
+      <div class="step-line" id="line1"></div>
+      <div class="step-item">
+        <div class="step-circle" id="sc2">2</div>
+        <span class="step-label" id="sl2">Trek</span>
+      </div>
+      <div class="step-line" id="line2"></div>
+      <div class="step-item">
+        <div class="step-circle" id="sc3">3</div>
+        <span class="step-label" id="sl3">Team</span>
+      </div>
+      <div class="step-line" id="line3"></div>
+      <div class="step-item">
+        <div class="step-circle" id="sc4">4</div>
+        <span class="step-label" id="sl4">Pay</span>
+      </div>
+    </div>
+  </div>
+</div>
 
-<section>
-  <div class="card">
-    <h2>Upcoming Treks</h2>
-    <p>🌄 Skandagiri Sunrise Trek</p>
-    <p>🌿 Kabini Getaway</p>
-    <a class="button" href="https://wa.me/91XXXXXXXXXX">Join via WhatsApp</a>
+<!-- MAIN -->
+<div class="main">
+
+  <!-- STEP 1: Your Details -->
+  <div class="section-card active" id="step1">
+    <div class="card-header">
+      <div class="card-icon">🧭</div>
+      <div>
+        <div class="card-title">Your details</div>
+        <div class="card-sub">Tell us a little about yourself</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="field-row">
+        <div class="field">
+          <label for="name">Full name</label>
+          <input type="text" id="name" placeholder="Riya Sharma"/>
+          <span class="err-msg" id="err-name">Please enter your name</span>
+        </div>
+        <div class="field">
+          <label for="age">Age</label>
+          <input type="number" id="age" placeholder="28" min="5" max="80"/>
+          <span class="err-msg" id="err-age">Please enter a valid age (5–80)</span>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="gender">Gender</label>
+          <div class="select-wrap">
+            <select id="gender">
+              <option value="">Select</option>
+              <option>Male</option>
+              <option>Female</option>
+              <option>Other</option>
+              <option>Prefer not to say</option>
+            </select>
+          </div>
+          <span class="err-msg" id="err-gender">Please select your gender</span>
+        </div>
+        <div class="field">
+          <label for="phone">Phone</label>
+          <input type="tel" id="phone" placeholder="98xxxxxxxx"/>
+          <span class="err-msg" id="err-phone">Enter a valid 10-digit number</span>
+        </div>
+      </div>
+      <div class="field-row single">
+        <div class="field">
+          <label for="email">Email address</label>
+          <input type="email" id="email" placeholder="riya@email.com"/>
+          <span class="err-msg" id="err-email">Please enter a valid email</span>
+        </div>
+      </div>
+      <div class="btn-row" style="margin-top:24px;">
+        <button class="btn-primary" onclick="goStep2()">Continue →</button>
+      </div>
+    </div>
   </div>
 
-  <div class="card">
-    <h2>About Us</h2>
-    <p>
-      TripperHut is a community-driven trekking group that believes in
-      real experiences, nature, and connections.
-    </p>
+  <!-- STEP 2: Choose Trek -->
+  <div class="section-card" id="step2">
+    <div class="card-header">
+      <div class="card-icon">🏔️</div>
+      <div>
+        <div class="card-title">Choose your trek</div>
+        <div class="card-sub">Select one of our curated experiences</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="trek-grid">
+        <div class="trek-card" onclick="selectTrek(this,'Kodachadri',1800,'2D/1N',['Moderate','Western Ghats','Camping'])">
+          <div class="trek-name">Kodachadri</div>
+          <div class="trek-meta">Shimoga, Karnataka</div>
+          <div class="trek-pills">
+            <span class="pill">Moderate</span>
+            <span class="pill">2D/1N</span>
+            <span class="pill">Camping</span>
+          </div>
+          <div class="trek-price">₹1,800 <span>/ person</span></div>
+        </div>
+        <div class="trek-card" onclick="selectTrek(this,'Kumara Parvatha',2500,'3D/2N',['Challenging','Coorg','Sunrise'])">
+          <div class="trek-name">Kumara Parvatha</div>
+          <div class="trek-meta">Coorg, Karnataka</div>
+          <div class="trek-pills">
+            <span class="pill">Challenging</span>
+            <span class="pill">3D/2N</span>
+            <span class="pill">Sunrise</span>
+          </div>
+          <div class="trek-price">₹2,500 <span>/ person</span></div>
+        </div>
+        <div class="trek-card" onclick="selectTrek(this,'Tadiandamol',900,'1D',['Easy','Coorg','Family'])">
+          <div class="trek-name">Tadiandamol</div>
+          <div class="trek-meta">Coorg, Karnataka</div>
+          <div class="trek-pills">
+            <span class="pill">Easy</span>
+            <span class="pill">1 Day</span>
+            <span class="pill">Family</span>
+          </div>
+          <div class="trek-price">₹900 <span>/ person</span></div>
+        </div>
+        <div class="trek-card" onclick="selectTrek(this,'Mullayanagiri',800,'1D',['Easy','Chikmagalur','Scenic'])">
+          <div class="trek-name">Mullayanagiri</div>
+          <div class="trek-meta">Chikmagalur, Karnataka</div>
+          <div class="trek-pills">
+            <span class="pill">Easy</span>
+            <span class="pill">1 Day</span>
+            <span class="pill">Scenic</span>
+          </div>
+          <div class="trek-price">₹800 <span>/ person</span></div>
+        </div>
+      </div>
+      <span class="err-msg" id="err-trek" style="display:block;margin-top:10px;"></span>
+      <div class="btn-row" style="margin-top:20px;">
+        <button class="btn-back" onclick="goStep(1)">←</button>
+        <button class="btn-primary" onclick="goStep3()">Continue →</button>
+      </div>
+    </div>
   </div>
-</section>
 
-<footer>
-  © 2026 TripperHut | Trek • Travel • Tribe
-</footer>
+  <!-- STEP 3: Co-trekkers -->
+  <div class="section-card" id="step3">
+    <div class="card-header">
+      <div class="card-icon">👥</div>
+      <div>
+        <div class="card-title">Your team</div>
+        <div class="card-sub">Add co-trekkers (optional)</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div id="cotrekker-list"></div>
+      <button class="add-co-btn" onclick="addCotrekker()">
+        <span style="font-size:18px;line-height:1;">+</span> Add co-trekker
+      </button>
+      <div class="btn-row" style="margin-top:24px;">
+        <button class="btn-back" onclick="goStep(2)">←</button>
+        <button class="btn-primary" onclick="goStep4()">Review & Pay →</button>
+      </div>
+    </div>
+  </div>
 
+  <!-- STEP 4: Summary + Payment -->
+  <div class="section-card" id="step4">
+    <div class="card-header">
+      <div class="card-icon">💳</div>
+      <div>
+        <div class="card-title">Review & pay</div>
+        <div class="card-sub">Confirm your booking details</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div id="summary-content"></div>
+      <div class="upi-block">
+        <div class="qr-placeholder">
+          <span style="font-size:24px;">⬛</span>
+          <span>QR Code</span>
+          <span style="font-size:9px;color:var(--muted);">Replace with real QR</span>
+        </div>
+        <div class="upi-id">tripperhut@upi</div>
+        <div class="upi-note">Scan & pay the advance amount</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px;">Balance due at the base camp</div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-back" onclick="goStep(3)">←</button>
+        <button class="btn-primary ember" onclick="confirmBooking()">✓ I've paid the advance</button>
+      </div>
+      <button class="btn-secondary" onclick="goStep(3)">← Edit team</button>
+    </div>
+  </div>
+
+  <!-- CONFIRMATION -->
+  <div class="section-card" id="step5">
+    <div class="confirm-screen">
+      <div class="confirm-icon">🎉</div>
+      <h2>You're all set!</h2>
+      <div class="confirm-ref" id="booking-ref">TRK-000000</div>
+      <p id="confirm-msg">Your trek has been booked.<br>See you on the trail!</p>
+      <div style="margin-top:32px;">
+        <button class="btn-primary" onclick="startOver()" style="max-width:240px;margin:0 auto;">Book another trek</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer-tag">
+  Powered by <a href="https://www.instagram.com/tripper.hut/" target="_blank">@tripper.hut</a> &nbsp;·&nbsp; Where Travel Meets Experience
+</div>
+
+<script>
+let selectedTrek = null;
+let cotrekkerCount = 0;
+
+function selectTrek(el, name, price, duration, tags) {
+  document.querySelectorAll('.trek-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedTrek = { name, price, duration };
+}
+
+function showErr(id, show) {
+  const el = document.getElementById(id);
+  if (el) { el.classList.toggle('show', show); }
+}
+
+function markField(id, err) {
+  const el = document.getElementById(id);
+  if (el) { el.classList.toggle('error', err); }
+}
+
+function goStep(n) {
+  document.querySelectorAll('.section-card').forEach(c => c.classList.remove('active'));
+  document.getElementById('step' + n).classList.add('active');
+  updateProgress(n);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateProgress(n) {
+  for (let i = 1; i <= 4; i++) {
+    const sc = document.getElementById('sc' + i);
+    const sl = document.getElementById('sl' + i);
+    sc.className = 'step-circle' + (i < n ? ' done' : i === n ? ' active' : '');
+    sl.className = 'step-label' + (i < n ? ' done' : i === n ? ' active' : '');
+    if (i < 4) {
+      document.getElementById('line' + i).className = 'step-line' + (i < n ? ' done' : '');
+    }
+  }
+}
+
+function goStep2() {
+  let ok = true;
+  const name = document.getElementById('name').value.trim();
+  const age = parseInt(document.getElementById('age').value);
+  const gender = document.getElementById('gender').value;
+  const phone = document.getElementById('phone').value.trim().replace(/\s/g,'');
+  const email = document.getElementById('email').value.trim();
+
+  if (name.length < 2) { showErr('err-name', true); markField('name', true); ok = false; } else { showErr('err-name', false); markField('name', false); }
+  if (isNaN(age) || age < 5 || age > 80) { showErr('err-age', true); markField('age', true); ok = false; } else { showErr('err-age', false); markField('age', false); }
+  if (!gender) { showErr('err-gender', true); markField('gender', true); ok = false; } else { showErr('err-gender', false); markField('gender', false); }
+  if (!/^\d{10}$/.test(phone)) { showErr('err-phone', true); markField('phone', true); ok = false; } else { showErr('err-phone', false); markField('phone', false); }
+  if (!email.includes('@') || !email.includes('.')) { showErr('err-email', true); markField('email', true); ok = false; } else { showErr('err-email', false); markField('email', false); }
+
+  if (ok) goStep(2);
+}
+
+function goStep3() {
+  if (!selectedTrek) {
+    const e = document.getElementById('err-trek');
+    e.textContent = 'Please select a trek to continue.';
+    e.classList.add('show');
+    return;
+  }
+  document.getElementById('err-trek').classList.remove('show');
+  goStep(3);
+}
+
+function addCotrekker() {
+  cotrekkerCount++;
+  const id = cotrekkerCount;
+  const list = document.getElementById('cotrekker-list');
+  const div = document.createElement('div');
+  div.className = 'cotrekker-item';
+  div.id = 'co-' + id;
+  div.innerHTML = `
+    <div class="cotrekker-header">
+      <div class="cotrekker-title">Co-trekker ${id}</div>
+      <button class="remove-btn" onclick="removeCo(${id})">×</button>
+    </div>
+    <div class="field-row triple">
+      <div class="field">
+        <label>Name</label>
+        <input type="text" id="co-name-${id}" placeholder="Name"/>
+        <span class="err-msg" id="co-err-name-${id}">Required</span>
+      </div>
+      <div class="field">
+        <label>Age</label>
+        <input type="number" id="co-age-${id}" placeholder="Age" min="5" max="80"/>
+        <span class="err-msg" id="co-err-age-${id}">Valid age</span>
+      </div>
+      <div class="field">
+        <label>Gender</label>
+        <div class="select-wrap">
+          <select id="co-gender-${id}">
+            <option value="">Select</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <span class="err-msg" id="co-err-gender-${id}">Required</span>
+      </div>
+    </div>
+  `;
+  list.appendChild(div);
+}
+
+function removeCo(id) {
+  const el = document.getElementById('co-' + id);
+  if (el) el.remove();
+}
+
+function getCotrekkers() {
+  const items = document.querySelectorAll('.cotrekker-item');
+  const result = []; let ok = true;
+  items.forEach(item => {
+    const id = item.id.replace('co-','');
+    const name = document.getElementById('co-name-'+id).value.trim();
+    const age = parseInt(document.getElementById('co-age-'+id).value);
+    const gender = document.getElementById('co-gender-'+id).value;
+    if (name.length < 2) { document.getElementById('co-err-name-'+id).classList.add('show'); ok = false; } else { document.getElementById('co-err-name-'+id).classList.remove('show'); }
+    if (isNaN(age)||age<5||age>80) { document.getElementById('co-err-age-'+id).classList.add('show'); ok = false; } else { document.getElementById('co-err-age-'+id).classList.remove('show'); }
+    if (!gender) { document.getElementById('co-err-gender-'+id).classList.add('show'); ok = false; } else { document.getElementById('co-err-gender-'+id).classList.remove('show'); }
+    if (name && !isNaN(age) && gender) result.push({ name, age, gender });
+  });
+  return ok ? result : null;
+}
+
+function goStep4() {
+  const cotrekkers = getCotrekkers();
+  if (cotrekkers === null) return;
+
+  const name = document.getElementById('name').value.trim();
+  const age = document.getElementById('age').value;
+  const gender = document.getElementById('gender').value;
+  const email = document.getElementById('email').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const total = selectedTrek.price * (1 + cotrekkers.length);
+  const advance = Math.round(total * 0.3);
+  const balance = total - advance;
+
+  let coRows = cotrekkers.length
+    ? cotrekkers.map(c => `<div class="summary-row"><span class="summary-label">${c.name}</span><span class="summary-val">${c.age} · ${c.gender}</span></div>`).join('')
+    : `<div class="summary-row"><span class="summary-label" style="font-style:italic;">No co-trekkers</span><span></span></div>`;
+
+  document.getElementById('summary-content').innerHTML = `
+    <div class="summary-row"><span class="summary-label">Name</span><span class="summary-val">${name}</span></div>
+    <div class="summary-row"><span class="summary-label">Age / Gender</span><span class="summary-val">${age} · ${gender}</span></div>
+    <div class="summary-row"><span class="summary-label">Contact</span><span class="summary-val">${email}</span></div>
+    <div class="summary-row"><span class="summary-label">Phone</span><span class="summary-val">${phone}</span></div>
+    <div class="summary-row"><span class="summary-label">Trek</span><span class="summary-val">${selectedTrek.name} (${selectedTrek.duration})</span></div>
+    ${coRows}
+    <div class="summary-row"><span class="summary-label">Price/person</span><span class="summary-val">₹${selectedTrek.price}</span></div>
+    <div class="summary-row"><span class="summary-label">Travellers</span><span class="summary-val">${1 + cotrekkers.length}</span></div>
+    <div class="summary-row summary-total"><span class="summary-label">Total</span><span class="summary-val">₹${total.toLocaleString()}</span></div>
+    <div class="summary-row summary-total"><span class="summary-label">Advance due now (30%)</span><span class="summary-val" style="color:var(--ember);">₹${advance.toLocaleString()}</span></div>
+    <div class="summary-row"><span class="summary-label">Balance at base camp</span><span class="summary-val">₹${balance.toLocaleString()}</span></div>
+  `;
+  goStep(4);
+}
+
+function confirmBooking() {
+  const ref = 'TRK-' + Math.floor(100000 + Math.random() * 900000);
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  document.getElementById('booking-ref').textContent = ref;
+  document.getElementById('confirm-msg').innerHTML =
+    `Booking confirmed for <strong>${name}</strong>.<br>Details will be sent to ${email}.<br><br>See you on the trail! 🏔️`;
+  goStep(5);
+  updateProgress(4);
+}
+
+function startOver() {
+  document.getElementById('name').value = '';
+  document.getElementById('age').value = '';
+  document.getElementById('gender').value = '';
+  document.getElementById('phone').value = '';
+  document.getElementById('email').value = '';
+  document.querySelectorAll('.trek-card').forEach(c => c.classList.remove('selected'));
+  selectedTrek = null;
+  document.getElementById('cotrekker-list').innerHTML = '';
+  cotrekkerCount = 0;
+  goStep(1);
+}
+</script>
 </body>
 </html>
