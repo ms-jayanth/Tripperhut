@@ -4,6 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Book a Trek — Tripper Hut</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
 :root {
@@ -407,6 +408,26 @@ input.error, select.error { border-color: var(--ember); }
 }
 .footer-tag a { color: var(--moss); text-decoration: none; }
 
+.upload-zone {
+  border: 1.5px dashed rgba(61,92,46,0.4);
+  border-radius: 10px; padding: 20px;
+  text-align: center; cursor: pointer;
+  transition: all 0.2s; margin: 16px 0;
+  background: var(--cream);
+  position: relative;
+}
+.upload-zone:hover { border-color: var(--moss); background: #f2f8ef; }
+.upload-zone.has-file { border-color: var(--moss); background: #f2f8ef; border-style: solid; }
+.upload-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.upload-icon { font-size: 28px; margin-bottom: 8px; }
+.upload-label { font-size: 13px; font-weight: 500; color: var(--moss); }
+.upload-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+.upload-preview { max-width: 100%; max-height: 160px; border-radius: 6px; margin-top: 10px; display: none; object-fit: contain; }
+.gs-status { font-size: 12px; padding: 8px 12px; border-radius: 6px; margin-top: 12px; display: none; text-align: center; }
+.gs-status.sending { background: #fff8e1; color: #7a6000; display: block; }
+.gs-status.success { background: #f2f8ef; color: var(--moss); display: block; }
+.gs-status.fail { background: #fff0eb; color: var(--ember); display: block; }
+
 @media (max-width: 480px) {
   .hero-content { padding: 36px 20px 28px; }
   .progress-bar { padding: 0 20px 18px; }
@@ -434,8 +455,8 @@ input.error, select.error { border-color: var(--ember); }
       <div class="brand-dot"></div>
       <span class="brand-name">Tripper Hut</span>
     </div>
+    <p style="font-size:12px;color:rgba(255,255,255,0.55);letter-spacing:0.06em;margin-bottom:14px;">Where Travel Meets Experience</p>
     <h1>Book your next<br><em>great adventure</em></h1>
-    <p>Where Travel Meets Experience &nbsp;·&nbsp; Customised Treks &amp; Stays</p>
   </div>
   <!-- PROGRESS -->
   <div class="progress-bar">
@@ -515,6 +536,26 @@ input.error, select.error { border-color: var(--ember); }
           <span class="err-msg" id="err-email">Please enter a valid email</span>
         </div>
       </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="gov-id-type">Government ID type</label>
+          <div class="select-wrap">
+            <select id="gov-id-type">
+              <option value="">Select ID type</option>
+              <option>PAN</option>
+              <option>Aadhaar</option>
+              <option>Driving License</option>
+              <option>Passport</option>
+            </select>
+          </div>
+          <span class="err-msg" id="err-gov-id-type">Please select an ID type</span>
+        </div>
+        <div class="field">
+          <label for="gov-id-number">ID number</label>
+          <input type="text" id="gov-id-number" placeholder="Enter ID number"/>
+          <span class="err-msg" id="err-gov-id-number">Please enter your ID number</span>
+        </div>
+      </div>
       <div class="btn-row" style="margin-top:24px;">
         <button class="btn-primary" onclick="goStep2()">Continue →</button>
       </div>
@@ -532,45 +573,65 @@ input.error, select.error { border-color: var(--ember); }
     </div>
     <div class="card-body">
       <div class="trek-grid">
-        <div class="trek-card" onclick="selectTrek(this,'Kodachadri',1800,'2D/1N',['Moderate','Western Ghats','Camping'])">
+        <div class="trek-card" onclick="selectTrek(this,'Kodachadri',4000,'2D/1N',['Moderate','Trekking','Streams'])">
           <div class="trek-name">Kodachadri</div>
           <div class="trek-meta">Shimoga, Karnataka</div>
           <div class="trek-pills">
             <span class="pill">Moderate</span>
-            <span class="pill">2D/1N</span>
-            <span class="pill">Camping</span>
+            <span class="pill">Trekking</span>
+            <span class="pill">Streams</span>
           </div>
-          <div class="trek-price">₹1,800 <span>/ person</span></div>
+          <div class="trek-price">₹4,000 <span>/ person</span></div>
         </div>
-        <div class="trek-card" onclick="selectTrek(this,'Kumara Parvatha',2500,'3D/2N',['Challenging','Coorg','Sunrise'])">
+        <div class="trek-card" onclick="selectTrek(this,'Kumara Parvatha',4000,'2D/1N',['Challenging','Trekking','Streams'])">
           <div class="trek-name">Kumara Parvatha</div>
           <div class="trek-meta">Coorg, Karnataka</div>
           <div class="trek-pills">
             <span class="pill">Challenging</span>
-            <span class="pill">3D/2N</span>
-            <span class="pill">Sunrise</span>
+            <span class="pill">Trekking</span>
+            <span class="pill">Streams</span>
           </div>
-          <div class="trek-price">₹2,500 <span>/ person</span></div>
+          <div class="trek-price">₹4,000 <span>/ person</span></div>
         </div>
-        <div class="trek-card" onclick="selectTrek(this,'Tadiandamol',900,'1D',['Easy','Coorg','Family'])">
+        <div class="trek-card" onclick="selectTrek(this,'Tadiandamol',4000,'2D/1N',['Easy','Trekking','Streams'])">
           <div class="trek-name">Tadiandamol</div>
           <div class="trek-meta">Coorg, Karnataka</div>
           <div class="trek-pills">
             <span class="pill">Easy</span>
-            <span class="pill">1 Day</span>
-            <span class="pill">Family</span>
+            <span class="pill">Trekking</span>
+            <span class="pill">Streams</span>
           </div>
-          <div class="trek-price">₹900 <span>/ person</span></div>
+          <div class="trek-price">₹4,000 <span>/ person</span></div>
         </div>
-        <div class="trek-card" onclick="selectTrek(this,'Mullayanagiri',800,'1D',['Easy','Chikmagalur','Scenic'])">
-          <div class="trek-name">Mullayanagiri</div>
+        <div class="trek-card" onclick="selectTrek(this,'Netravathi',4200,'2D/1N',['Easy','Trekking','Streams'])">
+          <div class="trek-name">Netravathi</div>
           <div class="trek-meta">Chikmagalur, Karnataka</div>
           <div class="trek-pills">
             <span class="pill">Easy</span>
-            <span class="pill">1 Day</span>
-            <span class="pill">Scenic</span>
+            <span class="pill">Trekking</span>
+            <span class="pill">Streams</span>
           </div>
-          <div class="trek-price">₹800 <span>/ person</span></div>
+          <div class="trek-price">₹4,200 <span>/ person</span></div>
+        </div>
+        <div class="trek-card" onclick="selectTrek(this,'Bandaje',4000,'2D/1N',['Moderate','Trekking','Streams'])">
+          <div class="trek-name">Bandaje</div>
+          <div class="trek-meta">Dakshina Kannada, Karnataka</div>
+          <div class="trek-pills">
+            <span class="pill">Moderate</span>
+            <span class="pill">Trekking</span>
+            <span class="pill">Streams</span>
+          </div>
+          <div class="trek-price">₹4,000 <span>/ person</span></div>
+        </div>
+        <div class="trek-card" onclick="selectTrek(this,'Kudremukh',4000,'2D/1N',['Challenging','Trekking','Streams'])">
+          <div class="trek-name">Kudremukh</div>
+          <div class="trek-meta">Chikmagalur, Karnataka</div>
+          <div class="trek-pills">
+            <span class="pill">Challenging</span>
+            <span class="pill">Trekking</span>
+            <span class="pill">Streams</span>
+          </div>
+          <div class="trek-price">₹4,000 <span>/ person</span></div>
         </div>
       </div>
       <span class="err-msg" id="err-trek" style="display:block;margin-top:10px;"></span>
@@ -614,18 +675,29 @@ input.error, select.error { border-color: var(--ember); }
     <div class="card-body">
       <div id="summary-content"></div>
       <div class="upi-block">
-        <div class="qr-placeholder">
-          <span style="font-size:24px;">⬛</span>
-          <span>QR Code</span>
-          <span style="font-size:9px;color:var(--muted);">Replace with real QR</span>
+        <div style="display:flex;justify-content:center;margin-bottom:12px;">
+          <div style="padding:10px;background:white;border-radius:8px;border:1px solid rgba(0,0,0,0.08);display:inline-block;">
+            <img src="data:image/png;base64,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" style="width:160px;height:160px;display:block;" alt="UPI QR Code"/>
+          </div>
         </div>
-        <div class="upi-id">tripperhut@upi</div>
-        <div class="upi-note">Scan & pay the advance amount</div>
+        <div class="upi-id">7892374957@ybl</div>
+        <div class="upi-note">Scan with any UPI app to pay the advance</div>
         <div style="font-size:11px;color:var(--muted);margin-top:4px;">Balance due at the base camp</div>
       </div>
+      <div style="margin-top:4px;">
+        <label style="font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);">Upload payment screenshot</label>
+        <div class="upload-zone" id="upload-zone">
+          <input type="file" id="screenshot-input" accept="image/*" onchange="handleScreenshot(this)"/>
+          <div class="upload-icon">📸</div>
+          <div class="upload-label">Tap to upload screenshot</div>
+          <div class="upload-sub">JPG, PNG — proof of your UPI payment</div>
+          <img id="upload-preview" class="upload-preview" alt="Payment screenshot"/>
+        </div>
+      </div>
+      <div class="gs-status" id="gs-status"></div>
       <div class="btn-row">
         <button class="btn-back" onclick="goStep(3)">←</button>
-        <button class="btn-primary ember" onclick="confirmBooking()">✓ I've paid the advance</button>
+        <button class="btn-primary ember" id="confirm-btn" onclick="confirmBooking()">✓ I've paid the advance</button>
       </div>
       <button class="btn-secondary" onclick="goStep(3)">← Edit team</button>
     </div>
@@ -703,6 +775,11 @@ function goStep2() {
   if (!/^\d{10}$/.test(phone)) { showErr('err-phone', true); markField('phone', true); ok = false; } else { showErr('err-phone', false); markField('phone', false); }
   if (!email.includes('@') || !email.includes('.')) { showErr('err-email', true); markField('email', true); ok = false; } else { showErr('err-email', false); markField('email', false); }
 
+  const govIdType = document.getElementById('gov-id-type').value;
+  const govIdNumber = document.getElementById('gov-id-number').value.trim();
+  if (!govIdType) { showErr('err-gov-id-type', true); markField('gov-id-type', true); ok = false; } else { showErr('err-gov-id-type', false); markField('gov-id-type', false); }
+  if (!govIdNumber) { showErr('err-gov-id-number', true); markField('gov-id-number', true); ok = false; } else { showErr('err-gov-id-number', false); markField('gov-id-number', false); }
+
   if (ok) goStep(2);
 }
 
@@ -753,6 +830,26 @@ function addCotrekker() {
         <span class="err-msg" id="co-err-gender-${id}">Required</span>
       </div>
     </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Government ID type</label>
+        <div class="select-wrap">
+          <select id="co-gov-id-type-${id}">
+            <option value="">Select ID type</option>
+            <option>PAN</option>
+            <option>Aadhaar</option>
+            <option>Driving License</option>
+            <option>Passport</option>
+          </select>
+        </div>
+        <span class="err-msg" id="co-err-gov-id-type-${id}">Required</span>
+      </div>
+      <div class="field">
+        <label>ID number</label>
+        <input type="text" id="co-gov-id-number-${id}" placeholder="Enter ID number"/>
+        <span class="err-msg" id="co-err-gov-id-number-${id}">Required</span>
+      </div>
+    </div>
   `;
   list.appendChild(div);
 }
@@ -770,10 +867,14 @@ function getCotrekkers() {
     const name = document.getElementById('co-name-'+id).value.trim();
     const age = parseInt(document.getElementById('co-age-'+id).value);
     const gender = document.getElementById('co-gender-'+id).value;
+    const govIdType = document.getElementById('co-gov-id-type-'+id).value;
+    const govIdNumber = document.getElementById('co-gov-id-number-'+id).value.trim();
     if (name.length < 2) { document.getElementById('co-err-name-'+id).classList.add('show'); ok = false; } else { document.getElementById('co-err-name-'+id).classList.remove('show'); }
     if (isNaN(age)||age<5||age>80) { document.getElementById('co-err-age-'+id).classList.add('show'); ok = false; } else { document.getElementById('co-err-age-'+id).classList.remove('show'); }
     if (!gender) { document.getElementById('co-err-gender-'+id).classList.add('show'); ok = false; } else { document.getElementById('co-err-gender-'+id).classList.remove('show'); }
-    if (name && !isNaN(age) && gender) result.push({ name, age, gender });
+    if (!govIdType) { document.getElementById('co-err-gov-id-type-'+id).classList.add('show'); ok = false; } else { document.getElementById('co-err-gov-id-type-'+id).classList.remove('show'); }
+    if (!govIdNumber) { document.getElementById('co-err-gov-id-number-'+id).classList.add('show'); ok = false; } else { document.getElementById('co-err-gov-id-number-'+id).classList.remove('show'); }
+    if (name && !isNaN(age) && gender && govIdType && govIdNumber) result.push({ name, age, gender, govIdType, govIdNumber });
   });
   return ok ? result : null;
 }
@@ -787,12 +888,17 @@ function goStep4() {
   const gender = document.getElementById('gender').value;
   const email = document.getElementById('email').value.trim();
   const phone = document.getElementById('phone').value.trim();
+  const govIdType = document.getElementById('gov-id-type').value;
+  const govIdNumber = document.getElementById('gov-id-number').value.trim();
   const total = selectedTrek.price * (1 + cotrekkers.length);
   const advance = Math.round(total * 0.3);
   const balance = total - advance;
 
   let coRows = cotrekkers.length
-    ? cotrekkers.map(c => `<div class="summary-row"><span class="summary-label">${c.name}</span><span class="summary-val">${c.age} · ${c.gender}</span></div>`).join('')
+    ? cotrekkers.map(c => `
+        <div class="summary-row"><span class="summary-label">${c.name}</span><span class="summary-val">${c.age} · ${c.gender}</span></div>
+        <div class="summary-row"><span class="summary-label" style="padding-left:8px;">${c.govIdType}</span><span class="summary-val">${c.govIdNumber}</span></div>
+      `).join('')
     : `<div class="summary-row"><span class="summary-label" style="font-style:italic;">No co-trekkers</span><span></span></div>`;
 
   document.getElementById('summary-content').innerHTML = `
@@ -800,6 +906,7 @@ function goStep4() {
     <div class="summary-row"><span class="summary-label">Age / Gender</span><span class="summary-val">${age} · ${gender}</span></div>
     <div class="summary-row"><span class="summary-label">Contact</span><span class="summary-val">${email}</span></div>
     <div class="summary-row"><span class="summary-label">Phone</span><span class="summary-val">${phone}</span></div>
+    <div class="summary-row"><span class="summary-label">${govIdType}</span><span class="summary-val">${govIdNumber}</span></div>
     <div class="summary-row"><span class="summary-label">Trek</span><span class="summary-val">${selectedTrek.name} (${selectedTrek.duration})</span></div>
     ${coRows}
     <div class="summary-row"><span class="summary-label">Price/person</span><span class="summary-val">₹${selectedTrek.price}</span></div>
@@ -811,18 +918,136 @@ function goStep4() {
   goStep(4);
 }
 
+// ── GOOGLE SHEETS CONFIG ──────────────────────────────────────
+// Paste your Google Apps Script Web App URL below after deploying.
+// See setup instructions in the README or ask for the Apps Script code.
+const GS_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
+// ─────────────────────────────────────────────────────────────
+
+let screenshotBase64 = null;
+let screenshotMime = 'image/jpeg';
+
+function handleScreenshot(input) {
+  const file = input.files[0];
+  if (!file) return;
+  screenshotMime = file.type || 'image/jpeg';
+  const reader = new FileReader();
+  reader.onload = e => {
+    screenshotBase64 = e.target.result.split(',')[1];
+    const preview = document.getElementById('upload-preview');
+    preview.src = e.target.result;
+    preview.style.display = 'block';
+    document.getElementById('upload-zone').classList.add('has-file');
+    document.querySelector('#upload-zone .upload-label').textContent = '✓ Screenshot uploaded';
+    document.querySelector('#upload-zone .upload-icon').textContent = '✅';
+  };
+  reader.readAsDataURL(file);
+}
+
+function setGsStatus(type, msg) {
+  const el = document.getElementById('gs-status');
+  el.className = 'gs-status ' + type;
+  el.textContent = msg;
+}
+
+async function sendToSheets(payload) {
+  if (GS_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
+    // Not configured — just proceed to confirmation
+    return;
+  }
+  const resp = await fetch(GS_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  if (!resp.ok) throw new Error('Sheet error');
+}
+
 function confirmBooking() {
+  if (!screenshotBase64) {
+    const zone = document.getElementById('upload-zone');
+    zone.style.borderColor = 'var(--ember)';
+    zone.style.background = '#fff6f3';
+    document.querySelector('#upload-zone .upload-label').textContent = 'Please upload your payment screenshot';
+    setTimeout(() => {
+      zone.style.borderColor = '';
+      zone.style.background = '';
+      document.querySelector('#upload-zone .upload-label').textContent = 'Tap to upload screenshot';
+    }, 2500);
+    return;
+  }
+
   const ref = 'TRK-' + Math.floor(100000 + Math.random() * 900000);
   const name = document.getElementById('name').value.trim();
+  const age = document.getElementById('age').value;
+  const gender = document.getElementById('gender').value;
   const email = document.getElementById('email').value.trim();
-  document.getElementById('booking-ref').textContent = ref;
-  document.getElementById('confirm-msg').innerHTML =
-    `Booking confirmed for <strong>${name}</strong>.<br>Details will be sent to ${email}.<br><br>See you on the trail! 🏔️`;
-  goStep(5);
-  updateProgress(4);
+  const phone = document.getElementById('phone').value.trim();
+  const govIdType = document.getElementById('gov-id-type').value;
+  const govIdNumber = document.getElementById('gov-id-number').value.trim();
+  const coItems = document.querySelectorAll('.cotrekker-item');
+  const cotrekkers = [];
+  coItems.forEach(item => {
+    const id = item.id.replace('co-','');
+    cotrekkers.push({
+      name: document.getElementById('co-name-'+id).value.trim(),
+      age: document.getElementById('co-age-'+id).value,
+      gender: document.getElementById('co-gender-'+id).value,
+      govIdType: document.getElementById('co-gov-id-type-'+id).value,
+      govIdNumber: document.getElementById('co-gov-id-number-'+id).value.trim()
+    });
+  });
+  const total = selectedTrek.price * (1 + cotrekkers.length);
+  const advance = Math.round(total * 0.3);
+  const balance = total - advance;
+
+  const payload = {
+    ref,
+    timestamp: new Date().toLocaleString('en-IN'),
+    name, age, gender, email, phone,
+    gov_id: `${govIdType}: ${govIdNumber}`,
+    trek: selectedTrek.name,
+    duration: selectedTrek.duration,
+    cotrekkers: cotrekkers.map(c => `${c.name} (${c.age}, ${c.gender}, ${c.govIdType}: ${c.govIdNumber})`).join(' | ') || 'None',
+    total_amount: total,
+    advance_paid: advance,
+    balance_due: balance,
+    screenshot: screenshotBase64 ? `data:${screenshotMime};base64,${screenshotBase64}` : ''
+  };
+
+  const btn = document.getElementById('confirm-btn');
+  btn.disabled = true;
+  btn.textContent = 'Saving…';
+  setGsStatus('sending', 'Saving your booking to our records…');
+
+  sendToSheets(payload)
+    .then(() => {
+      document.getElementById('booking-ref').textContent = ref;
+      document.getElementById('confirm-msg').innerHTML =
+        `Booking confirmed for <strong>${name}</strong>.<br>Details sent to ${email}.<br><br>See you on the trail! 🏔️`;
+      goStep(5);
+      updateProgress(4);
+      screenshotBase64 = null;
+      btn.disabled = false;
+      btn.textContent = "✓ I've paid the advance";
+    })
+    .catch(() => {
+      setGsStatus('fail', 'Could not save booking — please WhatsApp your screenshot to us directly.');
+      btn.disabled = false;
+      btn.textContent = "✓ I've paid the advance";
+    });
 }
 
 function startOver() {
+  screenshotBase64 = null;
+  document.getElementById('screenshot-input').value = '';
+  document.getElementById('upload-preview').style.display = 'none';
+  document.getElementById('upload-zone').classList.remove('has-file');
+  document.querySelector('#upload-zone .upload-label').textContent = 'Tap to upload screenshot';
+  document.querySelector('#upload-zone .upload-icon').textContent = '📸';
+  document.getElementById('gs-status').className = 'gs-status';
+  document.getElementById('gov-id-type').value = '';
+  document.getElementById('gov-id-number').value = '';
   document.getElementById('name').value = '';
   document.getElementById('age').value = '';
   document.getElementById('gender').value = '';
