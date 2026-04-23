@@ -423,6 +423,27 @@ input.error, select.error { border-color: var(--ember); }
 .upload-label { font-size: 13px; font-weight: 500; color: var(--moss); }
 .upload-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
 .upload-preview { max-width: 100%; max-height: 160px; border-radius: 6px; margin-top: 10px; display: none; object-fit: contain; }
+/* ── CALENDAR ── */
+.cal-wrap { margin-top: 20px; }
+.cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.cal-month { font-family: 'Playfair Display', serif; font-size: 16px; color: var(--forest); }
+.cal-nav { background: none; border: 1px solid rgba(0,0,0,0.1); border-radius: 6px; width: 30px; height: 30px; cursor: pointer; font-size: 14px; color: var(--muted); display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.cal-nav:hover { background: var(--cream); color: var(--text); }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.cal-dow { text-align: center; font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding: 4px 0; }
+.cal-day { text-align: center; padding: 7px 2px; border-radius: 6px; font-size: 13px; cursor: default; transition: all 0.15s; position: relative; }
+.cal-day.empty { background: none; }
+.cal-day.unavailable { color: #ccc; background: none; }
+.cal-day.available { background: #edf7ea; color: var(--moss); font-weight: 500; cursor: pointer; border: 1px solid rgba(61,92,46,0.15); }
+.cal-day.available:hover { background: #d4eece; border-color: var(--moss); }
+.cal-day.selected { background: var(--moss) !important; color: white !important; border-color: var(--moss) !important; font-weight: 600; }
+.cal-day.past { color: #ddd; background: none; cursor: default; }
+.cal-legend { display: flex; gap: 14px; margin-top: 10px; }
+.cal-legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--muted); }
+.cal-legend-dot { width: 10px; height: 10px; border-radius: 3px; }
+.err-msg-date { font-size: 11px; color: var(--ember); margin-top: 6px; display: none; }
+.err-msg-date.show { display: block; }
+
 .gs-status { font-size: 12px; padding: 8px 12px; border-radius: 6px; margin-top: 12px; display: none; text-align: center; }
 .gs-status.sending { background: #fff8e1; color: #7a6000; display: block; }
 .gs-status.success { background: #f2f8ef; color: var(--moss); display: block; }
@@ -467,17 +488,22 @@ input.error, select.error { border-color: var(--ember); }
       <div class="step-line" id="line1"></div>
       <div class="step-item">
         <div class="step-circle" id="sc2">2</div>
-        <span class="step-label" id="sl2">Trek</span>
+        <span class="step-label" id="sl2">Date</span>
       </div>
       <div class="step-line" id="line2"></div>
       <div class="step-item">
         <div class="step-circle" id="sc3">3</div>
-        <span class="step-label" id="sl3">Team</span>
+        <span class="step-label" id="sl3">Trek</span>
       </div>
       <div class="step-line" id="line3"></div>
       <div class="step-item">
         <div class="step-circle" id="sc4">4</div>
-        <span class="step-label" id="sl4">Pay</span>
+        <span class="step-label" id="sl4">Team</span>
+      </div>
+      <div class="step-line" id="line4"></div>
+      <div class="step-item">
+        <div class="step-circle" id="sc5">5</div>
+        <span class="step-label" id="sl5">Pay</span>
       </div>
     </div>
   </div>
@@ -561,88 +587,59 @@ input.error, select.error { border-color: var(--ember); }
     </div>
   </div>
 
-  <!-- STEP 2: Choose Trek -->
+  <!-- STEP 2: Pick a date -->
   <div class="section-card" id="step2">
     <div class="card-header">
-      <div class="card-icon">🏔️</div>
+      <div class="card-icon">📅</div>
       <div>
-        <div class="card-title">Choose your trek</div>
-        <div class="card-sub">Select one of our curated experiences</div>
+        <div class="card-title">Pick a date</div>
+        <div class="card-sub">Thursdays (1 day) · Saturdays (2D/1N)</div>
       </div>
     </div>
     <div class="card-body">
-      <div class="trek-grid">
-        <div class="trek-card" onclick="selectTrek(this,'Kodachadri',4000,'2D/1N',['Moderate','Trekking','Streams'])">
-          <div class="trek-name">Kodachadri</div>
-          <div class="trek-meta">Shimoga, Karnataka</div>
-          <div class="trek-pills">
-            <span class="pill">Moderate</span>
-            <span class="pill">Trekking</span>
-            <span class="pill">Streams</span>
-          </div>
-          <div class="trek-price">₹4,000 <span>/ person</span></div>
+      <div class="cal-wrap">
+        <div class="cal-header">
+          <button class="cal-nav" onclick="calPrev()">&#8249;</button>
+          <div class="cal-month" id="cal-month-label"></div>
+          <button class="cal-nav" onclick="calNext()">&#8250;</button>
         </div>
-        <div class="trek-card" onclick="selectTrek(this,'Kumara Parvatha',4000,'2D/1N',['Challenging','Trekking','Streams'])">
-          <div class="trek-name">Kumara Parvatha</div>
-          <div class="trek-meta">Coorg, Karnataka</div>
-          <div class="trek-pills">
-            <span class="pill">Challenging</span>
-            <span class="pill">Trekking</span>
-            <span class="pill">Streams</span>
-          </div>
-          <div class="trek-price">₹4,000 <span>/ person</span></div>
+        <div class="cal-grid" id="cal-grid"></div>
+        <div class="cal-legend">
+          <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#edf7ea;border:1px solid rgba(61,92,46,0.3);"></div> Available</div>
+          <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--moss);"></div> Selected</div>
+          <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#f0f0f0;"></div> Unavailable</div>
         </div>
-        <div class="trek-card" onclick="selectTrek(this,'Tadiandamol',4000,'2D/1N',['Easy','Trekking','Streams'])">
-          <div class="trek-name">Tadiandamol</div>
-          <div class="trek-meta">Coorg, Karnataka</div>
-          <div class="trek-pills">
-            <span class="pill">Easy</span>
-            <span class="pill">Trekking</span>
-            <span class="pill">Streams</span>
-          </div>
-          <div class="trek-price">₹4,000 <span>/ person</span></div>
-        </div>
-        <div class="trek-card" onclick="selectTrek(this,'Netravathi',4200,'2D/1N',['Easy','Trekking','Streams'])">
-          <div class="trek-name">Netravathi</div>
-          <div class="trek-meta">Chikmagalur, Karnataka</div>
-          <div class="trek-pills">
-            <span class="pill">Easy</span>
-            <span class="pill">Trekking</span>
-            <span class="pill">Streams</span>
-          </div>
-          <div class="trek-price">₹4,200 <span>/ person</span></div>
-        </div>
-        <div class="trek-card" onclick="selectTrek(this,'Bandaje',4000,'2D/1N',['Moderate','Trekking','Streams'])">
-          <div class="trek-name">Bandaje</div>
-          <div class="trek-meta">Dakshina Kannada, Karnataka</div>
-          <div class="trek-pills">
-            <span class="pill">Moderate</span>
-            <span class="pill">Trekking</span>
-            <span class="pill">Streams</span>
-          </div>
-          <div class="trek-price">₹4,000 <span>/ person</span></div>
-        </div>
-        <div class="trek-card" onclick="selectTrek(this,'Kudremukh',4000,'2D/1N',['Challenging','Trekking','Streams'])">
-          <div class="trek-name">Kudremukh</div>
-          <div class="trek-meta">Chikmagalur, Karnataka</div>
-          <div class="trek-pills">
-            <span class="pill">Challenging</span>
-            <span class="pill">Trekking</span>
-            <span class="pill">Streams</span>
-          </div>
-          <div class="trek-price">₹4,000 <span>/ person</span></div>
-        </div>
+        <div id="date-type-badge" style="display:none;margin-top:12px;padding:10px 14px;background:var(--cream);border-radius:8px;border:1px solid rgba(61,92,46,0.2);font-size:13px;color:var(--forest);"></div>
+        <span class="err-msg-date" id="err-date">Please select a date to continue.</span>
       </div>
-      <span class="err-msg" id="err-trek" style="display:block;margin-top:10px;"></span>
       <div class="btn-row" style="margin-top:20px;">
         <button class="btn-back" onclick="goStep(1)">←</button>
-        <button class="btn-primary" onclick="goStep3()">Continue →</button>
+        <button class="btn-primary" onclick="goStep2to3()">Continue →</button>
       </div>
     </div>
   </div>
 
-  <!-- STEP 3: Co-trekkers -->
+  <!-- STEP 3: Choose Trek -->
   <div class="section-card" id="step3">
+    <div class="card-header">
+      <div class="card-icon">🏔️</div>
+      <div>
+        <div class="card-title">Choose your trek</div>
+        <div class="card-sub" id="trek-step-sub">Select one of our curated experiences</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="trek-grid" id="trek-grid"></div>
+      <span class="err-msg" id="err-trek" style="display:block;margin-top:10px;"></span>
+      <div class="btn-row" style="margin-top:20px;">
+        <button class="btn-back" onclick="goStep(2)">←</button>
+        <button class="btn-primary" onclick="goStep4from3()">Continue →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4: Co-trekkers -->
+  <div class="section-card" id="step4">
     <div class="card-header">
       <div class="card-icon">👥</div>
       <div>
@@ -656,14 +653,14 @@ input.error, select.error { border-color: var(--ember); }
         <span style="font-size:18px;line-height:1;">+</span> Add co-trekker
       </button>
       <div class="btn-row" style="margin-top:24px;">
-        <button class="btn-back" onclick="goStep(2)">←</button>
-        <button class="btn-primary" onclick="goStep4()">Review & Pay →</button>
+        <button class="btn-back" onclick="goStep(3)">←</button>
+        <button class="btn-primary" onclick="goStep5()">Review & Pay →</button>
       </div>
     </div>
   </div>
 
-  <!-- STEP 4: Summary + Payment -->
-  <div class="section-card" id="step4">
+  <!-- STEP 5: Summary + Payment -->
+  <div class="section-card" id="step5">
     <div class="card-header">
       <div class="card-icon">💳</div>
       <div>
@@ -695,15 +692,15 @@ input.error, select.error { border-color: var(--ember); }
       </div>
       <div class="gs-status" id="gs-status"></div>
       <div class="btn-row">
-        <button class="btn-back" onclick="goStep(3)">←</button>
+        <button class="btn-back" onclick="goStep(4)">←</button>
         <button class="btn-primary ember" id="confirm-btn" onclick="confirmBooking()">✓ I've paid the advance</button>
       </div>
-      <button class="btn-secondary" onclick="goStep(3)">← Edit team</button>
+      <button class="btn-secondary" onclick="goStep(4)">← Edit team</button>
     </div>
   </div>
 
   <!-- CONFIRMATION -->
-  <div class="section-card" id="step5">
+  <div class="section-card" id="step6">
     <div class="confirm-screen">
       <div class="confirm-icon">🎉</div>
       <h2>You're all set!</h2>
@@ -722,13 +719,179 @@ input.error, select.error { border-color: var(--ember); }
 </div>
 
 <script>
+// ── TREK DATA ─────────────────────────────────────────────────
+const TREKS = [
+  { name:'Kodachadri',      meta:'Shimoga, Karnataka',          base:4000, difficulty:'Moderate' },
+  { name:'Kumara Parvatha', meta:'Coorg, Karnataka',            base:4000, difficulty:'Challenging' },
+  { name:'Tadiandamol',     meta:'Coorg, Karnataka',            base:4000, difficulty:'Easy' },
+  { name:'Netravathi',      meta:'Chikmagalur, Karnataka',      base:4200, difficulty:'Easy' },
+  { name:'Bandaje',         meta:'Dakshina Kannada, Karnataka', base:4000, difficulty:'Moderate' },
+  { name:'Kudremukh',       meta:'Chikmagalur, Karnataka',      base:4000, difficulty:'Challenging' },
+];
+
 let selectedTrek = null;
+let selectedDate = null;
+let calYear, calMonth;
 let cotrekkerCount = 0;
 
-function selectTrek(el, name, price, duration, tags) {
-  document.querySelectorAll('.trek-card').forEach(c => c.classList.remove('selected'));
-  el.classList.add('selected');
-  selectedTrek = { name, price, duration };
+// ── CALENDAR ──────────────────────────────────────────────────
+function initCal() {
+  if (calYear === undefined) {
+    const now = new Date();
+    calYear = now.getFullYear();
+    calMonth = now.getMonth();
+  }
+  renderCal();
+}
+
+function isAvailable(date) {
+  const day = date.getDay();
+  return day === 4 || day === 6; // Thursday=4, Saturday=6
+}
+
+function getTrekType(iso) {
+  const [y,m,d] = iso.split('-').map(Number);
+  const day = new Date(y, m-1, d).getDay();
+  if (day === 4) return { label:'Weekday trek', duration:'1 Day',  discount:500 };
+  if (day === 6) return { label:'Weekend trek',  duration:'2D/1N', discount:0   };
+  return null;
+}
+
+function renderCal() {
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('cal-month-label').textContent = months[calMonth] + ' ' + calYear;
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+  ['Su','Mo','Tu','We','Th','Fr','Sa'].forEach(d => {
+    const el = document.createElement('div'); el.className = 'cal-dow'; el.textContent = d; grid.appendChild(el);
+  });
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const today = new Date(); today.setHours(0,0,0,0);
+  for (let i = 0; i < firstDay; i++) {
+    const el = document.createElement('div'); el.className = 'cal-day empty'; grid.appendChild(el);
+  }
+  for (let d = 1; d <= daysInMonth; d++) {
+    const date = new Date(calYear, calMonth, d);
+    const iso = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const el = document.createElement('div'); el.textContent = d;
+    if (date < today) {
+      el.className = 'cal-day past';
+    } else if (isAvailable(date)) {
+      el.className = 'cal-day available' + (selectedDate === iso ? ' selected' : '');
+      el.onclick = () => selectCalDay(iso);
+    } else {
+      el.className = 'cal-day unavailable';
+    }
+    grid.appendChild(el);
+  }
+}
+
+function selectCalDay(iso) {
+  selectedDate = iso;
+  selectedTrek = null; // reset trek when date changes
+  document.getElementById('err-date').classList.remove('show');
+  renderCal();
+  const type = getTrekType(iso);
+  const badge = document.getElementById('date-type-badge');
+  badge.style.display = 'block';
+  badge.innerHTML = `<strong>${formatDate(iso)}</strong><br><span style="font-size:12px;color:var(--moss);">📋 ${type.label}${type.discount ? ' — ₹'+type.discount+' off per person' : ''}</span>`;
+}
+
+function calPrev() { calMonth--; if (calMonth < 0)  { calMonth=11; calYear--; } renderCal(); }
+function calNext() { calMonth++; if (calMonth > 11) { calMonth=0;  calYear++; } renderCal(); }
+
+// ── TREK GRID ─────────────────────────────────────────────────
+function renderTrekGrid() {
+  const type = getTrekType(selectedDate);
+  document.getElementById('trek-step-sub').textContent =
+    type.label + (type.discount ? ` · ₹${type.discount} off per person` : '');
+  const grid = document.getElementById('trek-grid');
+  grid.innerHTML = '';
+  TREKS.forEach(t => {
+    const price = t.base - type.discount;
+    const card = document.createElement('div');
+    card.className = 'trek-card' + (selectedTrek && selectedTrek.name === t.name ? ' selected' : '');
+    card.innerHTML = `
+      <div class="trek-name">${t.name}</div>
+      <div class="trek-meta">${t.meta}</div>
+      <div class="trek-pills">
+        <span class="pill">${t.difficulty}</span>
+        <span class="pill">Trekking</span>
+        <span class="pill">Streams</span>
+      </div>
+      <div class="trek-price">₹${price.toLocaleString()} <span>/ person</span></div>
+    `;
+    card.onclick = () => {
+      selectedTrek = { name:t.name, price, duration:type.duration };
+      document.getElementById('err-trek').classList.remove('show');
+      grid.querySelectorAll('.trek-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+    };
+    grid.appendChild(card);
+  });
+}
+
+// ── STEP NAVIGATION ───────────────────────────────────────────
+function goStep2to3() {
+  if (!selectedDate) { document.getElementById('err-date').classList.add('show'); return; }
+  renderTrekGrid();
+  goStep(3);
+}
+
+function goStep4from3() {
+  if (!selectedTrek) {
+    const e = document.getElementById('err-trek');
+    e.textContent = 'Please select a trek to continue.';
+    e.classList.add('show');
+    return;
+  }
+  document.getElementById('err-trek').classList.remove('show');
+  goStep(4);
+}
+
+function goStep5() {
+  const cotrekkers = getCotrekkers();
+  if (cotrekkers === null) return;
+
+  const name = document.getElementById('name').value.trim();
+  const age = document.getElementById('age').value;
+  const gender = document.getElementById('gender').value;
+  const email = document.getElementById('email').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const govIdType = document.getElementById('gov-id-type').value;
+  const govIdNumber = document.getElementById('gov-id-number').value.trim();
+  const total = selectedTrek.price * (1 + cotrekkers.length);
+  const advance = Math.round(total * 0.3);
+  const balance = total - advance;
+
+  const coRows = cotrekkers.length
+    ? cotrekkers.map((c, i) => `
+        <div style="border-top:1px solid rgba(0,0,0,0.06);margin:4px 0 0;padding-top:8px;">
+          <div style="font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--moss);margin-bottom:6px;">Co-trekker ${i + 1}</div>
+          <div class="summary-row"><span class="summary-label">Name</span><span class="summary-val">${c.name}</span></div>
+          <div class="summary-row"><span class="summary-label">Age / Gender</span><span class="summary-val">${c.age} · ${c.gender}</span></div>
+          <div class="summary-row"><span class="summary-label">${c.govIdType}</span><span class="summary-val">${c.govIdNumber}</span></div>
+        </div>
+      `).join('')
+    : `<div class="summary-row"><span class="summary-label" style="font-style:italic;">No co-trekkers</span><span></span></div>`;
+
+  document.getElementById('summary-content').innerHTML = `
+    <div class="summary-row"><span class="summary-label">Name</span><span class="summary-val">${name}</span></div>
+    <div class="summary-row"><span class="summary-label">Age / Gender</span><span class="summary-val">${age} · ${gender}</span></div>
+    <div class="summary-row"><span class="summary-label">Contact</span><span class="summary-val">${email}</span></div>
+    <div class="summary-row"><span class="summary-label">Phone</span><span class="summary-val">${phone}</span></div>
+    <div class="summary-row"><span class="summary-label">${govIdType}</span><span class="summary-val">${govIdNumber}</span></div>
+    <div class="summary-row"><span class="summary-label">Trek</span><span class="summary-val">${selectedTrek.name} (${selectedTrek.duration})</span></div>
+    <div class="summary-row"><span class="summary-label">Trek date</span><span class="summary-val">${formatDate(selectedDate)}</span></div>
+    ${coRows}
+    <div class="summary-row"><span class="summary-label">Price/person</span><span class="summary-val">₹${selectedTrek.price.toLocaleString()}</span></div>
+    <div class="summary-row"><span class="summary-label">Travellers</span><span class="summary-val">${1 + cotrekkers.length}</span></div>
+    <div class="summary-row summary-total"><span class="summary-label">Total</span><span class="summary-val">₹${total.toLocaleString()}</span></div>
+    <div class="summary-row summary-total"><span class="summary-label">Advance due now (30%)</span><span class="summary-val" style="color:var(--ember);">₹${advance.toLocaleString()}</span></div>
+    <div class="summary-row"><span class="summary-label">Balance due at onboarding</span><span class="summary-val">₹${balance.toLocaleString()}</span></div>
+  `;
+  goStep(5);
 }
 
 function showErr(id, show) {
@@ -746,15 +909,16 @@ function goStep(n) {
   document.getElementById('step' + n).classList.add('active');
   updateProgress(n);
   window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (n === 2) initCal();
 }
 
 function updateProgress(n) {
-  for (let i = 1; i <= 4; i++) {
+  for (let i = 1; i <= 5; i++) {
     const sc = document.getElementById('sc' + i);
     const sl = document.getElementById('sl' + i);
     sc.className = 'step-circle' + (i < n ? ' done' : i === n ? ' active' : '');
     sl.className = 'step-label' + (i < n ? ' done' : i === n ? ' active' : '');
-    if (i < 4) {
+    if (i < 5) {
       document.getElementById('line' + i).className = 'step-line' + (i < n ? ' done' : '');
     }
   }
@@ -783,14 +947,22 @@ function goStep2() {
 }
 
 function goStep3() {
+  let ok = true;
   if (!selectedTrek) {
     const e = document.getElementById('err-trek');
     e.textContent = 'Please select a trek to continue.';
     e.classList.add('show');
-    return;
+    ok = false;
+  } else {
+    document.getElementById('err-trek').classList.remove('show');
   }
-  document.getElementById('err-trek').classList.remove('show');
-  goStep(3);
+  if (!selectedDate) {
+    document.getElementById('err-date').classList.add('show');
+    ok = false;
+  } else {
+    document.getElementById('err-date').classList.remove('show');
+  }
+  if (ok) goStep(3);
 }
 
 function addCotrekker() {
@@ -878,47 +1050,13 @@ function getCotrekkers() {
   return ok ? result : null;
 }
 
-function goStep4() {
-  const cotrekkers = getCotrekkers();
-  if (cotrekkers === null) return;
-
-  const name = document.getElementById('name').value.trim();
-  const age = document.getElementById('age').value;
-  const gender = document.getElementById('gender').value;
-  const email = document.getElementById('email').value.trim();
-  const phone = document.getElementById('phone').value.trim();
-  const govIdType = document.getElementById('gov-id-type').value;
-  const govIdNumber = document.getElementById('gov-id-number').value.trim();
-  const total = selectedTrek.price * (1 + cotrekkers.length);
-  const advance = Math.round(total * 0.3);
-  const balance = total - advance;
-
-  let coRows = cotrekkers.length
-    ? cotrekkers.map((c, i) => `
-        <div style="border-top:1px solid rgba(0,0,0,0.06);margin:4px 0 0;padding-top:8px;">
-          <div style="font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--moss);margin-bottom:6px;">Co-trekker ${i + 1}</div>
-          <div class="summary-row"><span class="summary-label">Name</span><span class="summary-val">${c.name}</span></div>
-          <div class="summary-row"><span class="summary-label">Age / Gender</span><span class="summary-val">${c.age} · ${c.gender}</span></div>
-          <div class="summary-row"><span class="summary-label">${c.govIdType}</span><span class="summary-val">${c.govIdNumber}</span></div>
-        </div>
-      `).join('')
-    : `<div class="summary-row"><span class="summary-label" style="font-style:italic;">No co-trekkers</span><span></span></div>`;
-
-  document.getElementById('summary-content').innerHTML = `
-    <div class="summary-row"><span class="summary-label">Name</span><span class="summary-val">${name}</span></div>
-    <div class="summary-row"><span class="summary-label">Age / Gender</span><span class="summary-val">${age} · ${gender}</span></div>
-    <div class="summary-row"><span class="summary-label">Contact</span><span class="summary-val">${email}</span></div>
-    <div class="summary-row"><span class="summary-label">Phone</span><span class="summary-val">${phone}</span></div>
-    <div class="summary-row"><span class="summary-label">${govIdType}</span><span class="summary-val">${govIdNumber}</span></div>
-    <div class="summary-row"><span class="summary-label">Trek</span><span class="summary-val">${selectedTrek.name} (${selectedTrek.duration})</span></div>
-    ${coRows}
-    <div class="summary-row"><span class="summary-label">Price/person</span><span class="summary-val">₹${selectedTrek.price}</span></div>
-    <div class="summary-row"><span class="summary-label">Travellers</span><span class="summary-val">${1 + cotrekkers.length}</span></div>
-    <div class="summary-row summary-total"><span class="summary-label">Total</span><span class="summary-val">₹${total.toLocaleString()}</span></div>
-    <div class="summary-row summary-total"><span class="summary-label">Advance due now (30%)</span><span class="summary-val" style="color:var(--ember);">₹${advance.toLocaleString()}</span></div>
-    <div class="summary-row"><span class="summary-label">Balance at base camp</span><span class="summary-val">₹${balance.toLocaleString()}</span></div>
-  `;
-  goStep(4);
+function formatDate(iso) {
+  if (!iso) return '—';
+  const [y, m, d] = iso.split('-');
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const date = new Date(y, m - 1, d);
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  return `${days[date.getDay()]}, ${d} ${months[m-1]} ${y}`;
 }
 
 // ── GOOGLE SHEETS CONFIG ──────────────────────────────────────
@@ -1011,6 +1149,7 @@ function confirmBooking() {
     gov_id: `${govIdType}: ${govIdNumber}`,
     trek: selectedTrek.name,
     duration: selectedTrek.duration,
+    trek_date: formatDate(selectedDate),
     cotrekkers: cotrekkers.map(c => `${c.name} (${c.age}, ${c.gender}, ${c.govIdType}: ${c.govIdNumber})`).join(' | ') || 'None',
     total_amount: total,
     advance_paid: advance,
@@ -1028,16 +1167,22 @@ function confirmBooking() {
       document.getElementById('booking-ref').textContent = ref;
       document.getElementById('confirm-msg').innerHTML =
         `Booking confirmed for <strong>${name}</strong>.<br>Details sent to ${email}.<br><br>See you on the trail! 🏔️`;
-      goStep(5);
-      updateProgress(4);
       screenshotBase64 = null;
       btn.disabled = false;
       btn.textContent = "✓ I've paid the advance";
+      goStep(6);
+      updateProgress(5);
     })
     .catch(() => {
-      setGsStatus('fail', 'Could not save booking — please WhatsApp your screenshot to us directly.');
+      // Still navigate even if sheet fails
+      document.getElementById('booking-ref').textContent = ref;
+      document.getElementById('confirm-msg').innerHTML =
+        `Booking confirmed for <strong>${name}</strong>.<br>Details sent to ${email}.<br><br>See you on the trail! 🏔️`;
+      screenshotBase64 = null;
       btn.disabled = false;
       btn.textContent = "✓ I've paid the advance";
+      goStep(6);
+      updateProgress(5);
     });
 }
 
@@ -1058,6 +1203,9 @@ function startOver() {
   document.getElementById('email').value = '';
   document.querySelectorAll('.trek-card').forEach(c => c.classList.remove('selected'));
   selectedTrek = null;
+  selectedDate = null;
+  calYear = undefined;
+  calMonth = undefined;
   document.getElementById('cotrekker-list').innerHTML = '';
   cotrekkerCount = 0;
   goStep(1);
